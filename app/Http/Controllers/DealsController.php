@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Deal;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -29,9 +30,14 @@ class DealsController extends Controller
 //        $deal->name = 'Test Name';
 //        $deal->save();
 
+//        $users = User::with(['deals'])->get();
+//
+//        dump($users[0]->deals()->get());
+
 
         return view('welcome', [
             'deals' => [],
+            'users' => [],
         ]);
     }
 }
