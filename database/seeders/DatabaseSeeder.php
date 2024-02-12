@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Address;
+use App\Models\Deal;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,8 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         \App\Models\User::factory(100)->create();
-         \App\Models\Deal::factory(100)->create();
+         User::factory(100)->create()->each(function(User $user) {
+             $user->address()->save(Address::factory()->make());
+         });
+
+         Deal::factory(100)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

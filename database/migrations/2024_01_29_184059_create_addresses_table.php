@@ -11,11 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('deals', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->index();
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+
+            $table->string('street', 1000);
+
+            $table->unsignedBigInteger('user_id')->nullable();
 
             $table
-                ->foreign('user_id', 'deals_user_id_foreign')
+                ->foreign('user_id', 'address_user_id_foreign')
                 ->references('id')
                 ->on('users')
                 ->cascadeOnDelete();
@@ -27,9 +32,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('deals', function (Blueprint $table) {
-            $table->dropForeign('deals_user_id_foreign');
-            $table->dropColumn('user_id');
+        Schema::table('addresses', function (Blueprint $table) {
+            $table->dropForeign('address_user_id_foreign');
         });
+
+        Schema::dropIfExists('addresses');
     }
 };
