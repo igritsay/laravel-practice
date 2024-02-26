@@ -48,7 +48,7 @@ class DealsController extends Controller
 //
 //        dump($users[0]->deals()->get());
 
-        return $users;
+//        return $users;
 
         return view('welcome', [
             'deals' => [],
