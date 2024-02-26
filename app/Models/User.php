@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Orchid\Presenters\UserPresenter;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Orchid\Filters\Types\Like;

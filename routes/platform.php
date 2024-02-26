@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Orchid\Screens\Deal\DealListScreen;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -18,7 +19,6 @@ use App\Orchid\Screens\TaskScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -111,4 +111,13 @@ Route::screen('task', TaskScreen::class)
         return $trail
             ->parent('platform.index')
             ->push('Task');
+    });
+
+
+Route::screen('deals', DealListScreen::class)
+    ->name('admin.deal.list')
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Deals');
     });

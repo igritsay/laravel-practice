@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\VideoFormat;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Orchid\Support\Facades\Dashboard;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,10 +19,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         User::factory(100)->create()->each(function(User $user) {
-             $user->address()->save(Address::factory()->make());
-         });
-
         $formats = new Collection();
         $formats[] = VideoFormat::factory()->create([
          'name' => 'Teaser',
@@ -38,16 +36,26 @@ class DatabaseSeeder extends Seeder
             'name' => 'Speeches',
         ]);
 
-        $deals = Deal::factory(100)->create();
+        $adminUser = User::factory()->create([
+            'name'        => 'admin',
+            'email'       => 'admin@example.com',
+            'password'    => Hash::make('admin'),
+            'permissions' => Dashboard::getAllowAllPermission(),
+        ]);
 
-        $deals->each(function (Deal $deal) use ($formats) {
-            $deal->videoFormats()->attach([1]);
+        User::factory(100)->create()->each(function(User $user) use ($formats) {
+            $deals = Deal::factory(10)->create();
+            $deals->each(function (Deal $deal) use ($formats) {
+                $deal->videoFormats()->attach(
+                    $formats
+                        ->random(rand(1, 5))
+                        ->pluck('id')
+                        ->toArray()
+                );
+            });
+
+            $user->address()->save(Address::factory()->make());
+            $user->deals()->saveMany($deals);
         });
-
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

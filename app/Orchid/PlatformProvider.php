@@ -34,6 +34,11 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
+            Menu::make('All deals')
+                ->icon('briefcase')
+                ->route('admin.deal.list')
+                ->title('Deals'),
+
             Menu::make('Tasks')
                 ->icon('4-circle')
                 ->route('platform.task')
