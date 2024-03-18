@@ -3,13 +3,16 @@
 namespace App\Orchid\Screens\Deal;
 
 use App\Models\Deal;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\VideoFormat;
 use App\Orchid\Filters\VideoFormatFilter;
+use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Components\Cells\DateTime;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
 class DealListScreen extends Screen
@@ -27,9 +30,14 @@ class DealListScreen extends Screen
                 VideoFormatFilter::class,
             ])
             ->filters()
-            ->latest()
             ->paginate(20),
         ];
+    }
+
+    public function delete(Deal $deal): void
+    {
+        $deal->delete();
+        Alert::error("Deal \"{$deal->name}\" was deleted successfully!");
     }
 
     /**
@@ -66,7 +74,7 @@ class DealListScreen extends Screen
             ]),
             //Layout::m
             Layout::table('deals', [
-                TD::make('id', 'ID')->filter(),
+                TD::make('id', 'ID')->filter()->sort(),
                 TD::make('name', 'Name')->filter(),
                 TD::make('created_at', 'Created')
                     ->filter(TD::FILTER_DATE_RANGE)
@@ -88,9 +96,21 @@ class DealListScreen extends Screen
                     )
                 ,
                 TD::make('videoFormats', 'Video Formats')
+                    ->width('200px')
                     ->filter(TD::FILTER_SELECT)
                     ->filterOptions(VideoFormat::all()->mapWithKeys(fn(VideoFormat $format) => [$format->id => $format->name]))
                     ->render(fn(Deal $deal) => $deal->videoFormats->pluck('name')->implode(', ') )
+                ,
+
+                TD::make('Actions')
+                    ->alignRight()
+                    ->render(function (Deal $deal) {
+                        return Button::make('Delete')
+                            ->icon('bs.trash')
+                            ->class('btn btn-danger')
+                            ->confirm("Confirm you want to delete a deal \"{$deal->name}\"?")
+                            ->method('delete', ['deal' => $deal->id]);
+                    })
                 ,
             ]),
         ];

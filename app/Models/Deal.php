@@ -32,6 +32,11 @@ class Deal extends Model
         'videoFormats'  => WhereHas::class,
     ];
 
+    protected $allowedSorts = [
+        'id',
+        'name',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

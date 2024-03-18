@@ -14,8 +14,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('deal_video_format', function (Blueprint $table) {
-            //$table->id();
-            //$table->unsignedBigInteger('deal_id')->
             $table->foreignIdFor(Deal::class);
             $table->foreignIdFor(VideoFormat::class);
 
