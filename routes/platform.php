@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Orchid\Screens\Deal\DealEditScreen;
 use App\Orchid\Screens\Deal\DealListScreen;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
@@ -116,6 +117,14 @@ Route::screen('task', TaskScreen::class)
 
 Route::screen('deals', DealListScreen::class)
     ->name('admin.deal.list')
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Deals');
+    });
+
+Route::screen('deals/{deal}', DealEditScreen::class)
+    ->name('admin.deal.edit')
     ->breadcrumbs(function (Trail $trail) {
         return $trail
             ->parent('platform.index')
