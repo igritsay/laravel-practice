@@ -7,8 +7,10 @@ use App\Models\VideoFormat;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Picture;
 use Orchid\Screen\Fields\Quill;
 use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\Upload;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
@@ -63,11 +65,48 @@ class DealEditScreen extends Screen
                     ->title('Name:'),
 
                 Select::make('deal.videoFormats')
+                    ->title('Video Formats:')
                     ->fromModel(VideoFormat::class, 'name')
                     ->multiple(),
 
                 Quill::make('deal.content')
                     ->title('Content:'),
+
+                Picture::make('deal.thumbnail_id')
+                    ->title('Thumbnail:')
+                    ->storage('public')
+                    ->maxFileSize(5)
+                    ->groups('thumbnails')
+                    ->targetId(),
+
+
+                Upload::make('deal.documents')
+                    ->title('Documents:')
+                    ->storage('public')
+                    ->maxFileSize(10)
+                    ->parallelUploads(5)
+                    ->maxFiles(5)
+                    ->groups('documents')
+                    ->acceptedFiles('application/pdf'),
+
+                Upload::make('deal.images')
+                    ->title('Images:')
+                    ->storage('public')
+                    ->maxFileSize(10)
+                    ->parallelUploads(5)
+                    ->maxFiles(5)
+                    ->groups('images')
+                    ->acceptedFiles('image/*'),
+
+                Upload::make('deal.attachment')
+                    ->title('Attachments:')
+                    ->storage('public')
+                    ->maxFileSize(10)
+                    ->parallelUploads(5)
+                    ->maxFiles(5)
+                    ->groups('attachments')
+                    ->acceptedFiles('application/pdf,image/*'),
+
 
                 Button::make('Save')
                     ->class('btn btn-primary')
@@ -85,9 +124,14 @@ class DealEditScreen extends Screen
 
         $deal->name = $request->input('deal.name');
         $deal->content = $request->input('deal.content');
+        $deal->thumbnail_id = $request->input('deal.thumbnail_id');
 
         $deal->save();
 
         $deal->videoFormats()->sync($request->input('deal.videoFormats'));
+
+        $deal->documents()->syncWithoutDetaching($request->input('deal.documents', []));
+        $deal->images()->syncWithoutDetaching($request->input('deal.images', []));
+        $deal->attachment()->syncWithoutDetaching($request->input('deal.attachment', []));
     }
 }
