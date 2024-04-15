@@ -57,7 +57,12 @@ class DealListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make('Add New')
+                //->icon('bs.trash')
+                ->class('btn btn-primary')
+                ->route('admin.deal.create'),
+        ];
     }
 
     /**
@@ -75,7 +80,9 @@ class DealListScreen extends Screen
             //Layout::m
             Layout::table('deals', [
                 TD::make('id', 'ID')->filter()->sort(),
-                TD::make('name', 'Name')->filter(),
+                TD::make('name', 'Name')
+                    ->filter()
+                    ->render(fn (Deal $deal) => Link::make($deal->name)->route('admin.deal.edit', $deal)),
                 TD::make('created_at', 'Created')
                     ->filter(TD::FILTER_DATE_RANGE)
                     ->usingComponent(DateTime::class,
@@ -92,7 +99,7 @@ class DealListScreen extends Screen
                     ->filter(TD::FILTER_SELECT)
                     ->filterOptions(User::all()->mapWithKeys(fn(User $user) => [$user->id => $user->name]))
                     ->render(fn(Deal $deal) =>
-                        Link::make($deal->user->name)->route('platform.index')
+                        $deal->user ? Link::make($deal->user->name)->route('platform.index') : ''
                     )
                 ,
                 TD::make('videoFormats', 'Video Formats')

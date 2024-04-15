@@ -2,27 +2,21 @@
 
 namespace App\Orchid\Screens\Deal;
 
-use App\Models\Deal;
 use App\Orchid\Layouts\Deal\DealFormLayout;
 use Orchid\Screen\Screen;
 
-class DealEditScreen extends Screen
+class DealCreateScreen extends Screen
 {
     use SaveDeal;
 
-    protected ?Deal $deal = null;
     /**
      * Fetch data to be displayed on the screen.
      *
      * @return array
      */
-    public function query(Deal $deal): iterable
+    public function query(): iterable
     {
-        $this->deal = $deal;
-
-        return [
-            'deal' => $deal,
-        ];
+        return [];
     }
 
     /**
@@ -32,7 +26,7 @@ class DealEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return sprintf('Edit "%s" deal', $this->deal?->name ?? '');
+        return sprintf('Create new deal');
     }
 
     /**

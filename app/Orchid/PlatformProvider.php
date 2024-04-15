@@ -37,7 +37,17 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('All deals')
                 ->icon('briefcase')
                 ->route('admin.deal.list')
+                ->active([
+                    'admin.deal.list',
+                ])
                 ->title('Deals'),
+
+            Menu::make('New Deal')
+                ->icon('briefcase')
+                ->route('admin.deal.create')
+                ->active([
+                    'admin.deal.create',
+                ]),
 
             Menu::make('Tasks')
                 ->icon('4-circle')
