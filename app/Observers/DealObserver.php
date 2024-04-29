@@ -19,7 +19,7 @@ class DealObserver
 
     public function deleting(Deal $deal)
     {
-        $deal->thumbnail->delete();
+        $deal->thumbnail?->delete();
         $deal->documents->each->delete();
         $deal->images->each->delete();
         $deal->attachment->each->delete();
